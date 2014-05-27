@@ -4,7 +4,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 *.zip
@@ -14,3 +13,6 @@ hs_err_pid*
 
 #jade
 JADE/
+
+#Cartelle di Netbeans
+nbproject/

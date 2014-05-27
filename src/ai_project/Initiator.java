@@ -55,6 +55,14 @@ public class Initiator extends Agent {
                      } catch (FIPAException ex) {
                         Logger.getLogger(Initiator.class.getName()).log(Level.SEVERE, null, ex);
                      }
+                    ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
+                    for(int i=0; i<sellerAgents.length;i++)
+                        cfp.addReceiver(sellerAgents[i]);
+                    cfp.setLanguage("Italian");
+                    cfp.setContent("Buongiorno, come sta?");
+                    send(cfp);
+                    System.out.println(getName() + ": inviata CFP");
+                    step++;
                 break;
               case 1:
               break;

@@ -10,9 +10,10 @@ package ai_project;
  *
  * @author Andrea
  */
-import jade.core.Agent;
 import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -35,12 +36,23 @@ public class Initiator extends Agent {
         targetBookTitle = (String) args[0];
       System.out.println("Book Title"+targetBookTitle);
       
-      addBehaviour(new Behaviour() {
+      addBehaviour(new TickerBehaviour(this, 6000) {
         private int step = 0;
         
         @Override
+        /*
         public void action() {
-            switch(step) {
+            
+        }
+
+          @Override
+          public boolean done() {
+              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+          }*/
+
+
+          protected void onTick() {
+              switch(step) {
                 case 0:
                     DFAgentDescription template = new DFAgentDescription();
                     ServiceDescription sd = new ServiceDescription();
@@ -60,6 +72,7 @@ public class Initiator extends Agent {
                         cfp.addReceiver(sellerAgents[i]);
                     cfp.setLanguage("Italian");
                     cfp.setContent("Buongiorno, come sta?");
+                    System.out.println("Lunghezza sellerAgents: " + sellerAgents.length);
                     send(cfp);
                     System.out.println(getName() + ": inviata CFP");
                     step++;
@@ -69,11 +82,6 @@ public class Initiator extends Agent {
               case 2:
               break;
             }
-        }
-
-          @Override
-          public boolean done() {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
           }
      });
 

@@ -42,9 +42,11 @@ public class Participant1 extends Agent {
             public void action() {
                 switch(step) {
                   case 0:
+                        System.out.println("Sono partito" + getName());
                         MessageTemplate mt0 = MessageTemplate.MatchPerformative(ACLMessage.CFP);
                         ACLMessage reply0 = receive(mt0);
                         if (reply0 != null) {
+                            System.out.println("Ho un messaggio");
                             if (reply0.getContent().equals("Buongiorno, come sta?")) {
                                 System.out.println(getName() + ": rivevuta CFP! "+reply0.getContent());
                                 step++;
@@ -62,7 +64,7 @@ public class Participant1 extends Agent {
 
               @Override
               public boolean done() {
-                  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                  return step == 3;
               }
         });
     }

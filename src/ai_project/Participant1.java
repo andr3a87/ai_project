@@ -14,6 +14,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +42,16 @@ public class Participant1 extends Agent {
             public void action() {
                 switch(step) {
                   case 0:
+                        MessageTemplate mt0 = MessageTemplate.MatchPerformative(ACLMessage.CFP);
+                        ACLMessage reply0 = receive(mt0);
+                        if (reply0 != null) {
+                            if (reply0.getContent().equals("Buongiorno, come sta?")) {
+                                System.out.println(getName() + ": rivevuta CFP! "+reply0.getContent());
+                                step++;
+                            }
+                        } else {
+                            block();
+                        }
                   break;
                   case 1:
                   break;

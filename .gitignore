@@ -12,4 +12,6 @@
 hs_err_pid*
 
 #Cartelle di Netbeans
-/ai_project/nbproject/
+/nbproject/private/
+/build/
+/dist/

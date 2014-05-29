@@ -15,20 +15,45 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
  * @author Andrea
+ * 
  */
 public class Participant1 extends Agent {
+    
+    List<String> l = new ArrayList();
+    
     protected void setup() {
         DFAgentDescription dfd =new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
-        sd.setType("type1");
-        sd.setName("JADE-Type1");
+        Object[] args = getArguments();
+        String nomeFile = (String)args[0];
+        String s;
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(nomeFile));
+            while((s = reader.readLine()) != null ){
+                l.add(s);
+        }
+        
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Initiator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e){
+            Logger.getLogger(Initiator.class.getName()).log(Level.SEVERE, null, e);
+        }
+        sd.setType("peer");
+        sd.setName("JADE-Peer1");
         dfd.addServices(sd);
         try{
             DFService.register(this, dfd);
@@ -42,20 +67,33 @@ public class Participant1 extends Agent {
             public void action() {
                 switch(step) {
                   case 0:
-                        System.out.println("Sono partito" + getName());
                         MessageTemplate mt0 = MessageTemplate.MatchPerformative(ACLMessage.CFP);
-                        ACLMessage reply0 = receive(mt0);
-                        if (reply0 != null) {
+                        ACLMessage msg0 = receive(mt0);
+                        if (msg0 != null) {
                             System.out.println("Ho un messaggio");
-                            if (reply0.getContent().equals("Buongiorno, come sta?")) {
-                                System.out.println(getName() + ": rivevuta CFP! "+reply0.getContent());
+                            if (l.contains(msg0.getContent())) {
+                                System.out.println(getName() + ": Film Trovato!");
+                                ACLMessage reply0 = msg0.createReply();
+                                reply0.setPerformative(ACLMessage.PROPOSE);
+                                reply0.setContent("1000");
+                                send(reply0);
+                                System.out.println(getName() + ": inviata PROPOSE");
                                 step++;
+                            }
+                            else{
+                                System.out.println(getName() + ": Film NON Trovato!");
+                                ACLMessage reply0 = msg0.createReply();
+                                reply0.setPerformative(ACLMessage.REFUSE);
+                                reply0.setContent("0");
+                                send(reply0);
+                                System.out.println(getName() + ": inviata Refuse");
                             }
                         } else {
                             block();
                         }
                   break;
                   case 1:
+                      
                   break;
                   case 2:
                   break;

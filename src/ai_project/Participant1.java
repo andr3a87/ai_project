@@ -70,7 +70,7 @@ public class Participant1 extends Agent {
                         MessageTemplate mt0 = MessageTemplate.MatchPerformative(ACLMessage.CFP);
                         ACLMessage msg0 = receive(mt0);
                         if (msg0 != null) {
-                            System.out.println("Ho un messaggio");
+                            System.out.println(getName+": Ho un messaggio");
                             if (l.contains(msg0.getContent())) {
                                 System.out.println(getName() + ": Film Trovato!");
                                 ACLMessage reply0 = msg0.createReply();

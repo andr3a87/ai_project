@@ -29,9 +29,10 @@ import java.util.logging.Logger;
  * @author Andrea
  * 
  */
-public class Participant1 extends Agent {
+public class Participant extends Agent {
     
     List<String> l = new ArrayList();
+    String speed = new String();
     
     protected void setup() {
         DFAgentDescription dfd =new DFAgentDescription();
@@ -39,6 +40,7 @@ public class Participant1 extends Agent {
         ServiceDescription sd = new ServiceDescription();
         Object[] args = getArguments();
         String nomeFile = (String)args[0];
+        speed = (String)args[1];
         String s;
         BufferedReader reader;
         try {
@@ -75,7 +77,7 @@ public class Participant1 extends Agent {
                                 System.out.println(getName() + ": \tFilm Trovato!");
                                 ACLMessage reply0 = msg0.createReply();
                                 reply0.setPerformative(ACLMessage.PROPOSE);
-                                reply0.setContent("1000");
+                                reply0.setContent(speed);
                                 send(reply0);
                                 System.out.println(getName() + ": \tinviata PROPOSE");
                                 step++;

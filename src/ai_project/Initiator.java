@@ -83,7 +83,7 @@ public class Initiator extends Agent{
                                 cfp.addReceiver(sellerAgents[i]);
                             cfp.setLanguage("Italian");
                             //mando come contenuto del messaggio il nome del primo film
-                            cfp.setContent(l.remove(0));
+                            cfp.setContent(l.get(0));
                             send(cfp);
                             System.out.println(getName() + ": inviata CFP, nome film: " + cfp.getContent());
                             step++;
@@ -93,9 +93,58 @@ public class Initiator extends Agent{
                         }
                     break;
                 case 1:
+                    System.out.println("inizio case 1");
+                    MessageTemplate mt0 = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);    
+                    //ACLMessage msg0 = null;
+                    ACLMessage winner;
+                    ACLMessage msg0 = receive(mt0);
+                    if(msg0 != null){
+                        winner = msg0;
+                        do{
+                            msg0 = receive(mt0);
+                            if(msg0 != null){
+                                if(Integer.parseInt(msg0.getContent()) > Integer.parseInt(winner.getContent())){
+                                    //inserire reject di winner
+                                    ACLMessage refuse0 = winner.createReply();
+                                    refuse0.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                                    send(refuse0);
+                                    winner = msg0;
+                                }
+                                else{
+                                    //reject di msg0
+                                    ACLMessage refuse0 = msg0.createReply();
+                                    refuse0.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                                    send(refuse0);
+                                }
+                            }
+                        }while(msg0 != null);
+                        
+                        ACLMessage propose0 = winner.createReply();
+                        propose0.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                        propose0.setContent("Scelgo Te!");
+                        send(propose0);
+                        
+                        
+                        
+                    }else{
+                        block();
+                    }
+                        
+                    MessageTemplate mt1 = MessageTemplate.MatchPerformative(ACLMessage.INFORM);    
+                    ACLMessage msg1 = receive(mt1);
+                    if(msg1 != null)
+                        if(msg1.getContent().equals("done")){
+                            System.out.println("Ho scricato il film: \t"+l.get(0));
+                            l.remove(0);
+                            step = 0;
+                        }
+                        else{
+                            step = 0;
+                        }
+                    else
+                        block();
+                    
                     break;
-                case 2:
-                break;
                 }
     }
      });

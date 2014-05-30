@@ -70,32 +70,44 @@ public class Participant1 extends Agent {
                         MessageTemplate mt0 = MessageTemplate.MatchPerformative(ACLMessage.CFP);
                         ACLMessage msg0 = receive(mt0);
                         if (msg0 != null) {
-                            System.out.println(getName+": Ho un messaggio");
+                            System.out.println(getName()+": \tHo un messaggio");
                             if (l.contains(msg0.getContent())) {
-                                System.out.println(getName() + ": Film Trovato!");
+                                System.out.println(getName() + ": \tFilm Trovato!");
                                 ACLMessage reply0 = msg0.createReply();
                                 reply0.setPerformative(ACLMessage.PROPOSE);
                                 reply0.setContent("1000");
                                 send(reply0);
-                                System.out.println(getName() + ": inviata PROPOSE");
+                                System.out.println(getName() + ": \tinviata PROPOSE");
                                 step++;
                             }
                             else{
-                                System.out.println(getName() + ": Film NON Trovato!");
+                                System.out.println(getName() + ": \tFilm NON Trovato!");
                                 ACLMessage reply0 = msg0.createReply();
                                 reply0.setPerformative(ACLMessage.REFUSE);
                                 reply0.setContent("0");
                                 send(reply0);
-                                System.out.println(getName() + ": inviata Refuse");
+                                System.out.println(getName() + ": \tinviata Refuse");
                             }
                         } else {
                             block();
                         }
                   break;
                   case 1:
-                      
-                  break;
-                  case 2:
+                        MessageTemplate mt1 = MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                        ACLMessage msg1 = receive(mt1);
+                        if (msg1 != null) {
+                            System.out.println(getName()+": \tHo un messaggio");
+                            System.out.println(getName() + ": \tsceglie me!");
+                            
+                            ACLMessage reply1 = msg1.createReply();
+                            reply1.setPerformative(ACLMessage.INFORM);
+                            reply1.setContent("done");
+                            send(reply1);
+                            System.out.println(getName() + ": \tinviata Done");
+                            step = 0;
+                        } else {
+                            block();
+                        }
                   break;
                 }
             }
